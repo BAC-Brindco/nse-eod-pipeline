@@ -72,6 +72,18 @@ jobs:
       - name: Probe NSE
         run: python .github/scripts/probe_nse_egress.py
 
+      # Record the verdict where it can be read WITHOUT repository access. The probe
+      # exits 0 either way by design, so a green check on this workflow proves
+      # nothing on its own -- VIABLE and BLOCKED look identical from the Actions
+      # list. Skipped with a notice, never a failure, if the secret is unset.
+      - name: Record the verdict in Supabase
+        if: always()
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          pip install --quiet "psycopg[binary]>=3.2"
+          python .github/scripts/record_probe.py
+
       - name: Upload the report
         if: always()
         uses: actions/upload-artifact@v4
