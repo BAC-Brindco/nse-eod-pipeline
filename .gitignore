@@ -1,0 +1,17 @@
+.venv/
+.pgdata/
+.tools/
+data/raw/
+data/cache/
+logs/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.egg-info/
+
+# Windows reserved device name. A stray '> NUL' redirect from a non-cmd shell
+# creates a FILE called NUL, and 'git add' then dies with 'short read while
+# indexing NUL' -- which reads like repo corruption rather than a stray file.
+NUL
+nul

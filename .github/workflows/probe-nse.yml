@@ -1,0 +1,82 @@
+name: Probe NSE reachability
+
+# Answers one question before anything is built on GHA: can a GitHub-hosted runner
+# fetch NSE's files at all? The pipeline needs cookie warm-up and browser headers to
+# work from a desk in India, and NSE's edge treats datacenter / non-IN egress
+# differently.
+#
+# WHY IT RUNS ON A SCHEDULE AND NOT JUST ON DEMAND
+# A single probe answers "right now". NSE's posture varies by time of day and by
+# which runner pool GitHub allocates, so one 200 does not prove a nightly job would
+# survive. Three probes a day for a week is the evidence that would.
+#
+# THE SCHEDULE IS DELIBERATELY NOT AT 19:00 IST
+# The archive files appear after the close, so an early probe legitimately gets 404s.
+# These slots straddle publication: before, just after, and well after.
+#
+# GITHUB DISABLES SCHEDULED WORKFLOWS AFTER 60 DAYS OF REPOSITORY INACTIVITY, and a
+# commit does not re-enable them -- you must re-enable by hand in the Actions tab.
+# This is a probe with a finite life, so that is acceptable here; a production
+# pipeline on GHA would need a keepalive.
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: "Optional note recorded in the run name"
+        required: false
+        default: "manual probe"
+  schedule:
+    # UTC. 12:00 = 17:30 IST (pre-publication), 14:00 = 19:30 IST (just after),
+    # 17:00 = 22:30 IST (well after).
+    - cron: "0 12 * * 1-5"
+    - cron: "0 14 * * 1-5"
+    - cron: "0 17 * * 1-5"
+
+run-name: "NSE probe — ${{ inputs.note || 'scheduled' }}"
+
+# Read-only. This workflow needs nothing from the repo but the script.
+permissions:
+  contents: read
+
+concurrency:
+  group: nse-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: Probe from ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      # Different runner images sit in different egress pools, so a block on one is
+      # not proof of a block on all. Testing two costs nothing and removes the doubt.
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out the probe script only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # No pip install: the probe uses only the standard library, on purpose. A
+      # dependency install is another thing that can fail and confuse the result.
+      - name: Probe NSE
+        run: python .github/scripts/probe_nse_egress.py
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nse-probe-${{ matrix.os }}-${{ github.run_id }}
+          path: nse_probe_report.json
+          if-no-files-found: warn
+          retention-days: 30

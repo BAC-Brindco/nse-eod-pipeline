@@ -1,0 +1,327 @@
+# 8543 real NSE corp-action rows, 2023-01-01..2026-08-31, harvested 2026-08-31
+# 325 distinct templates (digits -> #). count | template
+1920	Dividend - Rs # Per Share
+1550	Annual General Meeting
+1353	Interim Dividend - Rs # Per Share
+788	Annual General Meeting/Dividend - Rs # Per Share
+604	Dividend - Re # Per Share
+379	Interim Dividend - Re # Per Share
+311	Interest Payment
+281	Annual General Meeting/Dividend - Re # Per Share
+184	Bonus #:#
+147	Rights #:# @ Premium Rs #/-
+105	Buy Back
+99	Face Value Split (Sub-Division) - From Rs #/- Per Share To Rs #/- Per Share
+95	Face Value Split (Sub-Division) - From Rs #/- Per Share To Re #/- Per Share
+78	Extra Ordinary General Meeting
+47	Demerger
+40	Dividend - Rs # Per Sh
+26	Interim Dividend - Rs # Per Sh
+25	Special Dividend - Rs # Per Share
+16	Dividend - Re # Per Sh
+15	Dividend - Rs # Per Share/Special Dividend - Rs # Per Share
+12	Annual General Meeting/Dividend - Rs # Per Share/Special Dividend - Rs # Per Share
+11	Annual General Meeting/Dividend - Rs # Per Sh
+9	Dividend - Rs # Per Share & Special Dividend - Rs # Per Share
+7	Rights #:#@ Premium Rs #/-
+7	Interim Dividend - Re # Per Sh
+6	Extra-Ordinary General Meeting
+6	Interim Dividend - Rs # Per Share/ Special Dividend - Rs # Per Share
+6	Dividend - Rs # Per Share/ Special Dividend - Rs # Per Share
+6	Dividend - Rs# Per Share
+6	Distribution - Rs # Per Unit Consists Of Interest- Rs # Per Unit/Total Dividend - Re # Per Unit/Repayment Of Spv Debt- Re # Per Unit/Treasury Income Re # Per Unit
+6	Dividend - Rs # Per Share & Special Dividend Rs # Per Share
+5	Interim Dividend - Rs # Per Share & Special Dividend Rs # Per Share
+5	Annual General Meetingdividend - Rs # Per Share
+5	Annual General Meeting/Dividend - Rs # Per Share/Special Dividend - Re # Per Share
+5	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Interest - Re # Per Unit/ Repayment Of Spv Debt - Rs # Per Unit /Other Income - Re # Per Unit
+4	Scheme Of Arrangement - Bonus Ncrps #:#
+4	Interim Dividend - Rs # Per Share Special Dividend - Rs # Per Share
+4	Rights #:# @ Premium Re #/-
+4	Interim Dividend - Rs # Per Share/Special Dividend - Rs # Per Share
+4	Annual General Meeting/ Dividend - Rs # Per Share
+4	Distribution - Rs # Per Unit Consists Of Interest- Rs # Per Unit/Dividend - Re # Per Unit/Return Of Capital Re # Per Unit
+4	Annual General Meetingdividend - Re # Per Share
+4	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Repayment Of Spv Debt And Ncds - Rs # Per Unit/ Dividend - Re # Per Unit/ Interest On Fixed Deposit - Re # Per Unit
+3	Special Interim Dividend - Rs # Per Share
+3	Annual General Meeting/Dividend - Rs # Per Share/ Special Dividend - Rs # Per Share
+3	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest/ Rs # Per Unit As Return Of Capital
+3	Distribution - Rs # Per Unit Consists Of Interst Amount - Rs # Per Unit/Dividend - Rs # Per Unit/ Repayment Of Spv Level Debt - Rs # Per Unit
+3	Rights #:# @ Premium Rs #
+3	Distribution - Rs # Per Unit Consists Of Rs. # Per Unit As Dividend/Rs. # Per Unit As Interest/ Rs. # Per Unit As Return Of Capital
+3	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit Principal Payment - Re # Per Unit Other Income - Re # Per Unit
+3	Distribution - Rs # Per Unit Comprises Of Interest - Re # Per Unit / Dividend - Rs # Per Unit / Other Income - Re # Per Unit / Repayment Of Spv Level Debt - Rs # Per Unit
+3	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Repayment Of Spv Debt - Rs # Per Unit/ Dividend - Re # Per Unit/ Interest On Fixed Deposit - Re # Per Unit
+3	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Other Income
+2	Dividend - Rs # Per Unit/Interst Amount - Rs # Per Unit/Return On Capital - Rs # Per Unit
+2	Buyback
+2	Interest Amount - Rs # Per Unit/ Return On Capital - Re # Per Unit
+2	Distribution- Rs # Comprising Interest- Rs # Per Unit/Other Income On Surplus Funds- Rs # Per Unit
+2	Distribution Rs # Per Unit Comprising Of Dividend - Rs # Per Unit/Interest Amount - Re # Per Unit Other Income Re # Per Unit
+2	Distribution- Rs # Comprising Interest Payment- Rs # Per Unit / Dividend - Re # Per Unit/ Principal Payment- Re # Per Unit/ Other Income - Re # Per Unit
+2	Distribution Rs # Per Unit Comprising Of Interest Amount - Rs # Per Unit/Repayment Of Spv Debt - Rs # Per Unit/Interest On Fixed Deposits- Re # Per Unit
+2	Dividend - Rs # Per Share /Special Dividend - Rs # Per Share
+2	Annual General Meeting/Dividend - Rs Per Share
+2	Annual General Meeting/Dividend - Rs # Per Share/Special Dividend Rs # Per Share
+2	Extra- Ordinary General Meeting
+2	Face Value Split (Sub-Division) - From Rs#/- Per Share To Rs #/- Per Share
+2	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Exempt Dividend Re # Per Unit
+2	Distribution - Rs # Per Unit Consisting Rs # Per As Interest & Re # Per Unit As Other Income On Surplus Funds
+2	Interim Dividend - Rs # Per Share & Special Dividend - Rs # Per Share
+2	Interim Dividend - Rs. # Per Share
+2	Distribution - Rs # Per Unit Consists Of Re. # Per Unit As Dividend/Rs. # Per Unit As Interest/ Rs. # Per Unit As Return Of Capital
+2	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Re # Per Unit/ Treasury Income - Re # Per Unit/ Repayment Of Spv Loan Rs # Per Unit
+2	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Return Of Capital Re # /Exempt Dividend Re # Per Unit
+2	Distribution - Rs # Per Unit Consists Of Interst Amount - Re # Per Unit/Dividend - Rs # Per Unit/ Repayment Of Debt - Rs # Per Unit
+2	Distribution - Re # Per Unit Consisting Of Re # Per Unit In The Form Of Interest & Re # Per Unit In The Form Of Return Of Capital
+2	Capital Reduction
+2	Distribution - Rs # Per Unit Consisting Of Rs # As Interest / Re # Per Unit As Other Income
+2	Annual General Meeting / Dividend - Rs # Per Share
+2	Distribution - Rs # Per Unit Comprises Of Rs # Per Unit In The Form Of Interest/ Rs # Per Unit In The Form Of Return Of Capital
+2	Distribution - Rs # Per Unit Comprising Of Rs # Per Unit In The Form Of Interest And Re # Per Unit As Other Income
+2	Distribution - Re # Per Unit Comprises Of Re # Per Unit As Interest And Re # Per Unit As Return On Capital
+2	Distribution - Rs # Per Unit Comprises Of Re # Per Unit As Interest And Rs # Per Unit As Repayment Of Spv Level Debt And Rs # As Dividend
+2	Redemption
+2	Dividend - Rs # Per Share/Special Dividend - # Per Share
+2	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Re # Per Unit/Return On Capital - Re # Per Unit
+2	Distribution - Rs # Per Unit Comprises Of Re # Per Unit As Interest/ Rs # Per Unit As Dividend & Rs # Per Unit As Repayment Of Spv Level Debt
+2	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/Re # Per Unit As Principal Repayment/Re # Per Unit As Other Income
+2	Distribution - Rs # Consisting Of Re # As Interest/ Rs # Per Unit As Dividend/ Re # Per Unit As Other Income/ Re # Per Unit As Repayment Of Spv Level Debt
+2	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Rs # Per Unit As Return Of Capital
+2	Distribution - Rs # Per Unit Consisting Of Re # Per Unit As Interest/ Re # Per Unit As Dividend/ Rs # Per Unit As Repayment Of Spv Level Debt
+2	Distribution - Rs # Per Unit Consists Of Re # Per Unit As Interest/ Re # Per Unit As Return Of Capital/ Re # Per Unit As Dividend
+2	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Rs # Per Unit As Capital Repayment/ Re # Per Unit As Other Income
+2	Dividend - Rs. # Per Share
+2	Distribution - Rs. # Per Unit As Interest
+2	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Repayment Of Spv Debt/ Re # Per Unit As Treasury Income
+2	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest / Re # Per Unit As Other Income
+2	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest /Re # Per Unit As Return Of Capital/ Re # Per Unit As Dividend / Re # Per Unit As Other Income
+2	Dividend - Rs # Per Share & Special Dividend Re # Per Share
+1	Interest- Rs # Per Unit/Taxable Dividend - Rs # Per Unit/Exempt Dividend- Rs # Per Unit/Spv Debt- Rs # Per Unit/Treasury Income Rs # Per Unit
+1	Distribution- Rs # Comprising Interest Payment- Rs # Per Unit / Principal Payment- Rs # Per Unit
+1	Dividend - Rs # Per Unit/Interst Amount - Re # Per Unit/Proceeds Of Amortization - Rs # Per Unit
+1	Distribution Rs # Per Unit Comprising Of Dividend - Rs # Per Unit/Interest Amount - Re # Per Unit
+1	Distribution Rs # Per Unit Comprising Of Dividend - Re # Per Unit/Interest Amount - Rs # Per Unit/Repayment Of Spv Debt - Rs # Per Unit/Interest On Fixed Deposits- Re # Per Unit
+1	Interest- Rs # Per Unit/Dividend - Rs # Per Unit/Return Of Capital- Rs # Per Unit/Other Income Re # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Return On Capital - Rs # Per Unit/Interest Amount - Rs # Per Unit
+1	Distribution Rs # Per Unit Comprising Of Interest Amount - Rs # Per Unit/Capital Repayment- Rs # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Interest - Re # Per Unit / Amortization Spv Level Debt - Re # Per Unit /Other Income Re # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Interest - Rs # Per Unit/Retun Of Capital Rs # Per Unit/Dividend - Rs # Per Unit/ Other Income On Surplus Funds - Re # Per Unit
+1	Interim Dividend - Rs # Per Share / Special Dividend - Rs # Per Share
+1	Rights #:# @ Premium Rs #/- With # Warrants For # Equity Shares
+1	Distribution - # Per Unit
+1	Bonus Ncrps #:#
+1	Final Dividend - Rs # Per Share
+1	Final Dividend - Rs #/ Special Dividend - Rs # Per Share
+1	Special Interim Dividend - Re # Per Share
+1	Extra Oridinary General Meeting
+1	Dividend - Rs # Per Unit/Interst Amount - Re # Per Unit/Repayment Of Spv Level Debt - Rs # Per Unit
+1	Distribution Rs # Per Unitconsists Of Dividend - Rs # Per Unit/Interst Amount - Rs # Per Unit/Return On Capital - Rs # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Interest - Rs # Per Unit/Retun Of Capital Rs # Per Unit/ Other Income On Surplus Funds - Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Dividend Re # Per Unit/ Interest - Re # Per Unit/ Return Of Capital - Re # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Return Of Capital - Re # Per Unit/Interest Amount - Rs # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Interest - Rs # Per Unit / Principal Repayment - Re # Per Unit /Other Income Re # Per Unit
+1	Annual General Meeting/Dividend - Re # Per Share/ Special Dividend - Rs # Per Share
+1	Annual General Meeting/Dividend - Rs # Per Share/ Special Dividend - Re # Per Share
+1	Dividend - Rs # Per Share/ Special Dividend - Re # Per Share
+1	Dividend - Rs # Per Share/ Special Dividend Rs # Per Share
+1	Annual General Meeting/Dividend- Rs # Per Share
+1	Distribution Rs # Per Unitconsists Of Dividend - Rs # Per Unit/Interst Amount - Rs # Per Unit
+1	Annual General Meetingdividend - Re # Per Sh
+1	Interst Amount - Re # Per Unit/Dividend - Rs # Per Unit/ Repayment Of Spv Level Debt - Rs # Per Unit/ Other Income - Re # Per Unit
+1	Annual General Meeting/Dividend - Rs # Per Share/Special Dividend # Per Share
+1	Annual General Meeting/Dividend - Rs # Per Share/Special Dividend -Rs # Per Share
+1	Distribution - Rs # Per Unit Consist Of Re # Interest Per Unit/Re # Return On Captial Per Unit/ Re # Return Of Capital Per Unit
+1	Distribution - Rs # Per Unit Consisting Interest - Rs # Per Unit/Return Of Capital- Rs # Per Unit/Dividend - Re # Per Unit
+1	Annual General Meeting/ Dividend - Re # Per Share
+1	Distribution - Rs # Per Unit Consists Of Interest Rs # Per Unit/ Other Income - Re # Per Unit
+1	Annual General Meeting/Dividend - Re # Per Sh
+1	Annual General Meeting/Dividend - Re # Per Share/Special Dividend Re # Per Share
+1	Dividend - Rs.# Per Share
+1	Dividend - Re # Per Share/Special Dividend - Re # Per Share
+1	Interest Amount - Rs # Per Unit/Return On Capital - Rs # Per Unit
+1	Annual General Meeting//Dividend - Rs # Per Share
+1	Rights #:#
+1	Distribution - Rs # Per Unit Consists Of Interst Amount - Re # Per Unit/Dividend - Rs # Per Unit
+1	Inteim Dividend - Re # Per Share
+1	Distribution - Rs # Comprising Of Rs # Per Unit In The Form Of Interest & Re # Per Unit Of Principal Payment & Re # Per Unit In The Form Of Other Income
+1	Distribution- Rs # Comprising Interest- Rs # Per Unit/Other Income On Surplus Funds- Re # Per Unit
+1	Inteirm Dividend - Rs # Per Share
+1	Distribution - Rs # Per Unit Consisting Interest - Rs # Per Unit And Other Income - Rs # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Interest Income - Rs # Per Unit & Treasury Income Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Rs # Interest Per Unit & Rs # Dividend Per Unit/ Re # Per Unit As Return Of Capital
+1	Interest Re # Per Unit/ Return Of Capital Re # Per Unit/ Dividend Re # Per Unit
+1	Distritbution - Rs # Per Unit Comprising Of Rs # Per Unit In The Form Dividend & Re # Per Unit In The Form Of Interest & Re # Per Unit In The Form Of Repayment Of Loan
+1	Distribution - Rs # Per Unit Consists Of Interest Amount - Rs # Per Unit/Return On Capital - Rs # Per Unit/ Dividend - Re # Per Unit
+1	Face Value Split (Sub-Division) - From Rs#/- Per Share To Re #/- Per Share
+1	Distribution - Rs # Per Unit Consisting Interest - Rs # Per Unit/ Capital Repayment - Re # Per Unit/ Other Income - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Dividend Rs # Per Unit/ Interest Rs # Per Unit/ Return Of Capital Rs # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Return Of Capital - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Interest - Re # Per Unit/ Other Income - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Treasury Income Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Rs # Interest Per Unit & Rs # Dividend Per Unit/ Rs # Per Unit As Return Of Capital
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit & Other Income Re # Per Unit
+1	Interim Dividend - Rs # Per Share/ Special Dividend - Re # Per Share
+1	Distribution Rs # Per Unit Comprising Of Interest Amount - Rs # Per Unit/Repayment Of Capital - Rs # Per Unit/Interest On Fixed Deposits- Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Interest Amount - Rs # Per Unit/Return On Capital - Rs # Per Unit/ Dividend - Rs # Per Unit
+1	Distribution - Interest Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Interest - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit Of Interest/ Rs # Per Unit Of Dividend / Rs # Per Unit Of Return Of Capital
+1	Special Dividend Rs -# Per Share/Interim Dividend Rs - # Per Share
+1	Distribution - Rs # Per Unit Comprising Of Interest Rs # Per Unit/ Repayment Of Shareholder Loan - Rs # Per Unit/ Interest Income On Fixed Deposits - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Rs # Per Unit/ Return Of Capital - Re # Per Unit/ Other Income - Re # Per Unit
+1	Distribution - Re # Per Unit Consisting Of Interest Re # Per Unit And Return Of Capital Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit Of Interest & Re # Per Unit Of Other Income
+1	Distribution - Re # Per Unit Consisting Of Re # Per Unit In The Form Of Interest And Re # Per Unit In The Form Of Other Income
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Dividend Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Dividend Rs # Per Unit And Interest Re # Per Unit
+1	Annual General Meeting/Special Dividend - Rs # Per Share /Dividend - Rs # Per Share
+1	Distribution - Rs # Consisting Of Rs # In The Form Of Interest/ Re # Principal Payment / Re # Other Income
+1	Annual General Meeting /Dividend - # Rs Per Share
+1	Annual General Meeting/Special Dividend - Rs # Per Share/ Dividend - Rs # Per Share
+1	Special Dividend - Rs # Per Share/ Dividend - Rs # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Interest Payment - Rs # Per Unit/ Return On Capital - Re # Per Unit
+1	Annual General Meeting/Dividend - Rs # Per Share & Special Dividend Rs # Per Share
+1	Annual General Meeting/Dividend - Rs Per Sh/
+1	Annual General Meeting/Dividend - Rs# Per Sh/
+1	Dividend - Rs #/ Special Dividend - Rs # Per Share
+1	Annual General Meeting/Dividend - Rs Re # Per Share
+1	Dividend - Rs # Per Share/Special Dividend - Re # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Dividend Re # Per Unit/ Interest Rs # Per Unit/Capital Repayment Re #
+1	Distribution - Rs # Consisting Of Rs # Per Unit In The Form Of Interest/ Re # Per Unit In The Form Of Other Income
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Re # Per Unit/ Interest On Fixed Deposit - Re # Per Unit/ Repayment Of Spv Loan Rs # Per Unit
+1	Dividend - Rs # Per Share/Special Dividend - Rs. # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Interest - Re # Per Unit/ Dividend - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Re # Per Unit In The Form Of Interest/ Re # Per Unit In The Form Of Return Of Capital
+1	Annual General Meeting / Dividend - Rs # Per Sh
+1	Annual General Me#etingdividend - Rs # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Interest Payment - Rs # Per Unit/ Return On Capital - Rs # Per Unit
+1	Extra Annual General Meeting
+1	Distribution - Rs # Per Unit Consisting Of Dividend Re # Per Unit/ Interest Rs # Per Unit/Other Income Re #
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Treasury Income Re # Per Unit/Dividend Re # Per Unit/ Repayment Of Spv Loan Re #
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Re # Per Unit/Return Of Capital # Per Unit/ Other Income # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit Of Interest
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit As Interest / Re # Per Unit As Return Of Capital
+1	Rights #:# @ Prm Rs #/-
+1	Distribution - Rs # Per Unit Consisting Of Dividend Re # Per Unit/ Interest Rs # Per Unit/Capital Repayment Re #/Other Income Re #
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Return Of Capital Re # /Dividend Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Re # Per Unit
+1	Interimdividend - Re # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit As Interest Income & Rs # Per Unit As Repayment Of Spv Loan
+1	Distribution - Rs # Per Unit In The Form Of Interest
+1	Distribution - Rs # Per Unit Comprising Of Re # Per Unit In The Form Of Interest/ Re # Per Unit In The Form Of Return Of Capital
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit Taxable Dividend & Rs # Per Unit Exempt Dividend/ Interest Payment Re # Per Unit
+1	Distribution - Rs # Per Unit Comprising Of Rs # Per Unit As Interest/ Rs # Per Unit As Other Income
+1	Interim Dividend - Rs Per # Share
+1	Distribution - Rs # Per Unit Consists Of Interest Amount - Re # Per Unit/Return On Capital - Re # Per Unit/ Dividend - Rs # Per Unit/ Other Income - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Interest - Re # Per Unit/ Repayment Of Spv Debt - Rs # Per Unit /Other Income - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Re # Per Unit/ Dividend - Rs # Per Unit/Return On Capital - Re # Per Unit
+1	Distribution - Re # Per Unit Consisting Of Re # Per Unit As Interest & Re # Per Unit As Return On Capital
+1	Distribution - Rs # Per Unit Consisting Of Re # Per Unit As Interest / Re # Per Unit As Return Of Capital / Re # As Dividend
+1	Distribution - Rs # Per Unit Consisting Of Dividend Rs # Per Unit/ Interest Rs # Per Unit/Capital Repayment Rs #/Other Income Rs #
+1	Distribution - Rs # Per Unit Consisting Of Re # Per Unit - Interest/ Re # Per Unit - Capital/ Total Dividend - Re # Per Unit/ Re # Per Unit - Other Income
+1	Distribution - Rs # Per Unit Consists Of Dividend - Rs # Per Unit
+1	Rights #: # @ Premium Rs #/-
+1	Distribution - Rs # Per Unit Comprising Of Re # Per Unit In The Form Of Interest/ Rs # Per Unit In The Form Of Return Of Capital
+1	Distribution - Rs # Per Unit Comprising Interest - Rs # Per Unit / Return On Capital - Rs # Per Unit / Other Income Re - #
+1	Distribution - Rs # Per Unit Consists Of Interest- Rs # Per Unit/Dividend - Re # Per Unit/ Dividend For Apr # To Apr #, # - Re # /Return Of Capital Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Treasury Income Re # Per Unit/Dividend Re # Per Unit/ Repayment Of Spv Loan Rs # Per Unit
+1	Distribution - Re # Per Unit Consists Of Re # Per Unit As Interest/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit / Repayment Of Capital - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Re # Per Unit/ Dividend - Rs # Per Unit/ Return Of Capital - Rs # Per Unit/ Other Income - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # And Return Of Capital Rs # Per Unit
+1	Consolidation Of Equity Shares From Re # Per Share To Rs # Per Share
+1	Dividend - Rs # Per Share & Special Dividend Of Rs # Per Share/ Special Dividend Of Rs #
+1	Annual General Meeting /Dividend - Rs # Per Share & Special Dividend - Rs # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Interest - Re # Per Unit / Return Of Capital - Re # Per Unit/Dividend - Re # Per Unit
+1	Dividend - Rs # Per Share And Special Dividend Rs # Per Share
+1	Dividend - Rs # Per Share & Special Dividend - Rs #
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Dividend - Rs # Per Unit / Capital Repayment - Rs # Per Unit / Other Income - Rs # Per Unit
+1	Distribution - Re # Per Unitconsisiting Of Interest - Re # Per Unit / Return On Capital - Re # Per Unit
+1	Distribution - # Consisting Of Interest Rs # Per Unit / Other Income - Rs #
+1	Distribution - Rs # Per Unit Consists Of Rs. # Per Unit As Dividend/Rs # Per Unit As Interest
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit Interest Payment & Rs # Per Unit Of Return Of Capital
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Interest On Fd And Mf And Re # Per Unit As Return On Capital And Re # Per Unit As Interest Income
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest Payment/ Re # Per Unit As Principal Repayment/ Re # Per Unit As Other Income
+1	Distribution - Re # Per Unit Consisting Of Return Of Capital Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Interest Amount - Re # Per Unit/ Dividend - Re # Per Unit/Other Income - Re # Per Unit
+1	Distribution - Rs # Per Unit Consistingrs # Per Unit - Interest/ Rs # Per Unit - Return Of Capital/Dividend - Re # Per Unit/ Re # Per Unit - Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consisting Of Interest Re # And Return Of Capital Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit / Other Income - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # Per Unit/ Treasury Income Re # Per Unit/Dividend Re # Per Unit/ Return Of Capital Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Dividend Rs # Per Unit /Interest Rs # Per Unit / Return Of Capital Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs # Per Unit/ Repayment Of Shareholder Loan - Rs # Per Unit/ Dividend - Re # Per Unit/ Interest On Fixed Deposit - Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Interest- Rs # Per Unit/Dividend - Re # Per Unit/Repayment Of Spv Debt- Re # Per Unit/Treasury Income Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Rs # Per Unit - Interest/Rs # Per Unit - Return Of Capital/Re # Per Unit - Dividend/Re # - Other Income
+1	Distribution - Rs # Consists Of Rs # In The Form Of Dividend And Re # In The Form Of Interest And Re # In The Form Repayment Of Capital
+1	Distribution - Rs # Consist Of Rs # Per Unit As Interest & Re # Per Unit As Repayment Of Capital
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest & Re # Per Unit As Dividend & Re # Per Unit As Capital Repayment & Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consist Of Re # As Interest & Re # Per Unit As Dividend & Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consist Of Re # As Interest Income & Re # As Return Of Capital
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest & Re # Per Unit As Principal Repayment & Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest & Re # Per Unit As Other Income On Surplus Funds
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Interest & Re # Per Unit As Return Of Capital & Re # Per Unit As Dividend
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest & Rs # Per Unit As Dividend & Re # Per Unit As Return Of Capital
+1	Distribution - Rs # Per Unit Consisting Of Interest Rs # And Return Of Capital Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Interest - Rs. #/ Dividend - Re. #/Other Income - Re. #
+1	Interim Dividend Rs # Per Share/ Special Dividend Rs # Per Share
+1	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Interest - Re # Per Unit/ Repayment Of Spv Debt - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest & Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consisting Rs # Per Unit - Interest/Rs # Per Unit - Return Of Capital/Re # Per Unit - Dividend
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit As Interest/Re # Per Unit As Dividend/Rs # Per Unit As Return Of Capital
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest And Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Dividend/ Rs # Per Unit As Interest/ Rs # Per Unit As Return Of Capital
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Dividend/ Re # Per Unit As Interest/ Re # Per Unit As Repayment Of Debt/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Interest/ Rs # Per Unit As Dividend/ Re # Per Unit As Return Of Capital/ Re # Per Unit As Other Income
+1	Interim Dividend - Re # Per Share & Special Dividend Rs # Per Share
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Repayment Of Capital (Spv Debt)/ Re # Per Unit As Treasury Income
+1	Distribution - Rs # Consists Of Re # Per Unit As Interest/ Re # Per Unit As Return Of Capital/ Re # Per Unit As Dividend
+1	Distribution - Re # Per Unit As Interest
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Rs # Per Unit As Capital Repayment/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Rs # Per Unit As Repayment Of Capital
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Return Of Capital
+1	Intereim Dividend - Rs # Per Share
+1	Distribution - Rs # Per Unit Consists Of Re # Per Unit As Interest And Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Dividend
+1	Distribution - Rs # Per Unit Consisting Of Re # Per Unit As Interest/ Rs # Per Unit As Dividend/ Rs # Per Unit As Repayment Of Spv Level Debt
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend
+1	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Repayment Of Spv Debt - Rs # Per Unit/ Interest - Re # Per Unit/Other Income - Re # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Re # Per Unit As Interest/ Rs # Per Unit As Return Of Capital
+1	Distribution - Re # Per Unit Consists Of Re # Per Unit As Dividend/ Re # Per Unit As Interest
+1	Distribution - Rs # Consisting Of Re # Per Unit As Interest/ Rs # Per Unit As Dividend/ Re # Per Unit As Other Income/ Re # Per Unit As Repayment Of Debt
+1	Distribution - Rs # Per Unit Consisting Of Re # Per Unit As Interest/ Rs # Per Unit As Other Income On Surplus Funds At Trust Level
+1	Distribution Rs # Consists Of Rs # Per Unit As Interest/ Re # Per Unit As Return Of Capital/ Re # Per Unit As Exempt Dividend
+1	Rights #:# @ Premium Re # /-
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Interest/ Rs # Per Unit As Dividend/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Repayment Of Capital/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit As Interest/Re # Per Unit As Dividend/Rs # Per Unit As Return Of Capital/Rs # Per Unit As Tresury Income
+1	Distribution - Rs # Per Unit Comprising Interest - Rs # Per Unit / Return Of Capital - Rs # Per Unit / Other Income Re - #
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Interest / Re # Per Unit As Return Of Capital
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Rs # Per Unit As Return Of Capital
+1	Interim Dividend - Rs. # Per Sh
+1	Rights #:# @ Premium #
+1	Rights #:# @ Premium Re. #/-
+1	Dividend - Re # Per Share/Special Dividend - Rs # Per Share
+1	Dividend - Rs # Per Share/Special Dividend - Rs #
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Repayment Of Capital/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest & Re # Per Unit As Return Of Capital
+1	Distribution - Rs # Consisting Of Re # Per Unit As Dividend/ Rs # Per Unit As Interest/ Re # Per Unit As Other Income/ Re # Per Unit As Repayment Of Debt
+1	Dividend - Re # Per Share & Special Dividend - Re # Per Share
+1	Distribution - Rs # Consisting Of Rs # As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Other Income/ Re # Per Unit As Repayment Of Spv Level Debt
+1	Distribution - Rs # Per Unit Consist Of Re # Per Unit As Dividend/ Rs # Per Unit As Interest/ Rs # Per Unit As Return Of Capital
+1	Distribution - Rs # Per Unit Consisting Of Dividend - Rs # Per Unit/ Repayment Of Spv Debt - Rs # Per Unit
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Re # Per Unit As Principal Repayment/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Interest Rs # Per Unit & Return Of Capital Rs # Per Unit
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit As Interest & Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Interest Rs # Per Unit & Other Income Re # Per Unit
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Dividend & Re # Per Unit As Interest
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Rs # Per Unit As Dividend/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest/ Re # Per Unit As Return Of Capital/ Re # Per Unit As Dividend
+1	Distribution - Rs # Per Unit Consist Of Rs # Per Unit As Interest/ Re # Per Unit As Dividend/ Rs # Per Unit As Capital Repayment
+1	Distribution - Rs # Per Unit Consists Of Re # Per Unit As Interest/ Rs # Per Unit As Repayment Of Debt/ Re # Per Unit As Other Income
+1	Distribution - Rs # Per Unit Consisting Of Rs # Per Unit As Interest/Rs # Per Unit As Dividend/Re # Per Unit As Return Of Capital/Rs # Per Unit As Tresury Income
+1	Distribution - Rs # Per Unit As Interest
+1	Distribution - Rs # Per Unit Consists Of Rs # Per Unit As Interest/ Rs # Per Unit As Dividend/ Re # Per Unit As Return Of Capital
+1	Rights - # Ccps And # Warrants:#
