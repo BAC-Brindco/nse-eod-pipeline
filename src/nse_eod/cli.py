@@ -394,6 +394,43 @@ def assert_factors_cmd(
 
 
 # -------------------------------------------------------- universe-status (A2)
+@app.command("refresh-quality")
+def refresh_quality_cmd(
+    isin: Optional[str] = typer.Option(
+        None, "--isin", help="rebuild the gate for one security only"
+    ),
+) -> None:
+    """Recompute security_quality, then rebuild gold.tradeable_universe.
+
+    WHY THIS IS A SEPARATE COMMAND
+    ------------------------------
+    run-daily rebuilds the gate as its last step, and ONLY when every validation
+    check has passed -- that ordering is the whole point of the gate, so a failed run
+    leaves the previous known-good universe in place rather than widening it.
+
+    `backfill` does not go through that path. It writes bronze, silver and gold and
+    stops, which means the universe still describes only the dates it covered before.
+    The trading layer reads the UNIVERSE, not gold, so a backfill that completed
+    perfectly would leave the dashboard showing nothing new -- a silent no-op that
+    looks like a data problem.
+
+    Running this by hand after a backfill closes that gap. It is also the right
+    command after resolving a review-queue item, since that changes a security's
+    verification status without touching any prices.
+    """
+    from .transform.quality import refresh
+
+    out = refresh(isins=[isin.strip().upper()] if isin else None)
+    q, u = out["quality"], out["universe"]
+    typer.echo("  security_quality")
+    for k in ("verified", "review_open", "blocked"):
+        if k in q:
+            typer.echo(f"    {k:<18}{q[k]:>8,}")
+    typer.echo("  gold.tradeable_universe")
+    for k, v in u.items():
+        typer.echo(f"    {k:<18}{v if not isinstance(v, int) else format(v, ',')}")
+
+
 @app.command("universe-status")
 def universe_status_cmd(
     isin: Optional[str] = typer.Option(None, "--isin", help="look up one security"),

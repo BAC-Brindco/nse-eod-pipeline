@@ -1,0 +1,153 @@
+name: EOD backfill
+
+# One-time (or occasional) history load, run ON GITHUB rather than uploaded.
+#
+# WHY NOT UPLOAD FROM THE WORKSTATION
+# -----------------------------------
+# The workstation already holds the full history, so copying it up is the obvious
+# move -- and the wrong one. It is ~2.35M gold rows plus ~2.4M bronze rows, roughly
+# 3.2 GB, which over a home upstream is hours of wall clock with a single TCP stream
+# that has to survive the whole way.
+#
+# A runner sits on a fast link to both NSE and Supabase. Re-fetching from the source
+# is faster, needs nothing from the workstation, and produces bronze rows with real
+# provenance -- source_file, row_hash and ingested_at all describe an actual download
+# rather than a copy of a copy. That last property is why this is the better answer
+# even ignoring speed: the three-store discipline says bronze is what we fetched, and
+# a mirrored bronze row quietly stops being true.
+#
+# The probe confirmed this is possible: VIABLE from both ubuntu-latest and
+# windows-latest, 8/9 archives 200, cookie-gated API 200 after warm-up, from UK
+# egress. See ops.egress_probe.
+#
+# RUN IT IN CHUNKS
+# ----------------
+# A GitHub job is killed at 6 hours. 900 sessions is comfortably inside that on
+# paper, but a single job that dies at hour 5 loses nothing and proves nothing, so
+# there is no reason to gamble: run a year at a time. Every step is idempotent --
+# natural-key upserts, content hashing, and a run watermark -- so a re-run of an
+# already-loaded range writes nothing and costs only the HTTP round trips.
+#
+#   2023-01-16 -> 2023-12-31        (900 sessions back from 2026-09-02 starts here)
+#   2024-01-01 -> 2024-12-31
+#   2025-01-01 -> 2025-12-31
+#   2026-01-01 -> today
+#
+# MIND THE RETENTION WINDOW
+# -------------------------
+# eod-daily.yml trims anything older than RETAIN_SESSIONS (900). Backfilling further
+# back than that is not wrong, but the next daily run will delete it again. Raise the
+# retention there first if you want deeper history in the cloud.
+
+on:
+  workflow_dispatch:
+    inputs:
+      from:
+        description: "Range start, YYYY-MM-DD (required)"
+        required: true
+      to:
+        description: "Range end, YYYY-MM-DD. Blank = today."
+        required: false
+      skip_gold:
+        description: "Ingest bronze/silver only, defer the panel rebuild"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  # SHARED with eod-daily.yml on purpose. A backfill rebuilding the panel while the
+  # daily run is also rebuilding it would have two writers recomputing cum_factor for
+  # overlapping ISINs, and the loser's rows would carry a factor_asof that no longer
+  # matches what is stored. Serialising them is cheaper than reasoning about it.
+  group: eod-pipeline
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    # Under GitHub's 6-hour ceiling, so the job reports its own timeout rather than
+    # being killed mid-transaction with no summary.
+    timeout-minutes: 340
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: State before
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY'
+          import os, psycopg
+          with psycopg.connect(os.environ["DATABASE_URL"]) as c, c.cursor() as cur:
+              for t in ("bronze.eod_bhav_raw", "gold.eod_adjusted",
+                        "gold.tradeable_universe", "silver.corp_action_event"):
+                  cur.execute(f"select count(*), min(trade_date), max(trade_date) from {t}"
+                              if t != "silver.corp_action_event" else
+                              f"select count(*), min(ex_date), max(ex_date) from {t}")
+                  n, lo, hi = cur.fetchone()
+                  print(f"  {t:<28} {n:>10,} rows   {lo} .. {hi}")
+          PY
+
+      - name: Backfill
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          args=(--from "${{ inputs.from }}")
+          if [ -n "${{ inputs.to }}" ]; then args+=(--to "${{ inputs.to }}"); fi
+          if [ "${{ inputs.skip_gold }}" = "true" ]; then args+=(--no-gold); fi
+          echo "nse-eod backfill ${args[*]}"
+          nse-eod backfill "${args[@]}"
+
+      - name: Rebuild the verified universe
+        if: success() && inputs.skip_gold != true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # THIS STEP IS LOAD-BEARING, and the reason is easy to miss.
+        #
+        # gold.tradeable_universe is a materialised TABLE, and run-daily rebuilds it
+        # as its LAST step -- only after every validation check passes, so a failed
+        # run leaves the previous known-good universe rather than widening the gate.
+        #
+        # `backfill` does not go through that path. It writes bronze, silver and gold
+        # and stops. The trading layer reads the UNIVERSE, not gold, so without this
+        # a backfill that completed perfectly would leave the dashboard showing
+        # nothing new -- and it would look like a data problem rather than a missing
+        # step.
+        #
+        # universe-status only REPORTS; refresh-quality is what rebuilds.
+        run: |
+          nse-eod refresh-quality
+          nse-eod universe-status
+
+      - name: State after
+        if: always()
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          {
+            echo "## Backfill ${{ inputs.from }} .. ${{ inputs.to || 'today' }}"
+            echo
+            echo '```'
+            python - <<'PY'
+          import os, psycopg
+          with psycopg.connect(os.environ["DATABASE_URL"]) as c, c.cursor() as cur:
+              for t in ("bronze.eod_bhav_raw", "gold.eod_adjusted",
+                        "gold.tradeable_universe"):
+                  cur.execute(f"select count(*), min(trade_date), max(trade_date) from {t}")
+                  n, lo, hi = cur.fetchone()
+                  print(f"{t:<28} {n:>10,} rows   {lo} .. {hi}")
+              cur.execute("select pg_size_pretty(pg_database_size(current_database()))")
+              print(f"\ndatabase size: {cur.fetchone()[0]}  (Supabase Pro allowance: 8 GB)")
+          PY
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
