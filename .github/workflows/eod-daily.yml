@@ -1,0 +1,175 @@
+name: Daily EOD pipeline
+
+# Runs the corporate-action-adjusted EOD pipeline on a GitHub runner, writing to
+# Supabase. The workstation is not involved.
+#
+# WHY THIS IS POSSIBLE WITH NO CODE CHANGES
+# -----------------------------------------
+# config.py: "moving from laptop to the server is a matter of changing DATABASE_URL
+# and nothing else." The pipeline upserts on natural keys, hashes source content so an
+# unchanged file writes nothing, keeps a run watermark so a completed day is skipped,
+# and treats gold as a pure function of bronze plus the factor table. Every one of
+# those properties is what makes a re-run on a fresh, stateless runner safe.
+#
+# THE ONE THING THAT MIGHT STOP IT
+# --------------------------------
+# NSE's edge treats datacenter egress differently from residential. This pipeline
+# needs cookie warm-up, browser headers and backoff to work from an Indian home
+# connection; a GitHub runner egresses as US/EU Azure. Run probe-nse.yml FIRST -- it
+# answers that question without touching the database. If the probe says BLOCKED, this
+# workflow cannot work from GitHub and the fetch has to run somewhere with an
+# acceptable IP.
+#
+# GITHUB DISABLES SCHEDULED WORKFLOWS AFTER 60 DAYS OF REPOSITORY INACTIVITY, and
+# pushing a commit does NOT re-enable them -- it must be done by hand in the Actions
+# tab. For a pipeline that feeds a trading dashboard that is a silent single point of
+# failure, so the heartbeat step below records every successful run in the database
+# where the dashboard can see its own staleness.
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Session to ingest (YYYY-MM-DD). Blank = latest."
+        required: false
+      skip_retention:
+        description: "Do not trim old sessions this run"
+        type: boolean
+        default: false
+  schedule:
+    # 13:30 UTC = 19:00 IST. NSE publishes the bhavcopy after the close; this is the
+    # same slot the workstation used, chosen because the files are reliably up by then.
+    - cron: "30 13 * * 1-5"
+
+permissions:
+  contents: read
+
+concurrency:
+  # One pipeline run at a time against one database. NOT cancel-in-progress: a
+  # cancelled run can leave the watermark unset with bronze rows already written, and
+  # the next run would then redo work it cannot tell is finished.
+  group: eod-pipeline
+  cancel-in-progress: false
+
+jobs:
+  eod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      # ------------------------------------------------------------------ preflight
+      - name: Can this runner reach NSE?
+        id: probe
+        # Deliberately BEFORE any database work. If NSE is unreachable there is
+        # nothing to ingest, and finding that out after opening a run record leaves a
+        # spurious 'running' row behind. The probe always exits 0 -- a block is a
+        # finding -- so the verdict is read out of its output rather than its status.
+        run: |
+          python .github/scripts/probe_nse_egress.py | tee probe.txt
+          verdict=$(grep -oE '=== VERDICT: [A-Z]+' probe.txt | tail -1 | awk '{print $3}')
+          echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
+          echo "::notice::NSE reachability from this runner: $verdict"
+          if [ "$verdict" = "BLOCKED" ]; then
+            echo "::error::NSE is blocking this runner's egress. Not attempting an ingest."
+            exit 1
+          fi
+
+      # -------------------------------------------------------------------- ingest
+      - name: Run the daily pipeline
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -n "${{ inputs.date }}" ]; then
+            nse-eod run-daily --date "${{ inputs.date }}"
+          else
+            nse-eod run-daily
+          fi
+
+      - name: Verified universe status
+        if: always()
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: nse-eod universe-status
+
+      - name: Heartbeat
+        if: success()
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # Content is DERIVED FROM THE DATABASE, never from the wall clock, so running
+        # this by hand cannot move last_success_at forward and fake freshness.
+        run: nse-eod last-success
+
+      # ----------------------------------------------------------------- retention
+      - name: Trim sessions outside the retention window
+        if: success() && !inputs.skip_retention
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # 900 sessions ~= 3.5 years. Not a round number: the dashboard's
+          # history.build() loads features.bars_required (292) + 500 = 792 sessions so
+          # the 200-day average is non-null on the first VISIBLE chart bar. Below 792
+          # every chart's long averages start late.
+          RETAIN_SESSIONS: "900"
+        # WHAT THIS COSTS, STATED PLAINLY: after a trim, gold can no longer be
+        # re-derived for the deleted dates, because bronze no longer holds their raw
+        # rows. Re-deriving them means re-fetching those bhavcopies from NSE's
+        # archives. That is the price of fitting a hosted database, and it is
+        # acceptable because the workstation retains the full history as the archive
+        # of record.
+        #
+        # Order matters: gold first, then bronze. Gold is derived FROM bronze, so
+        # deleting bronze first would briefly leave gold rows whose source is gone --
+        # and a validation step running in that window would report a real
+        # inconsistency that is purely an artefact of delete ordering.
+        run: |
+          python - <<'PY'
+          import os
+          import psycopg
+
+          retain = int(os.environ["RETAIN_SESSIONS"])
+          with psycopg.connect(os.environ["DATABASE_URL"], autocommit=False) as conn:
+              with conn.cursor() as cur:
+                  cur.execute("""
+                      SELECT min(cal_date) FROM (
+                        SELECT cal_date FROM bronze.trading_calendar
+                         WHERE is_trading_day
+                         ORDER BY cal_date DESC LIMIT %s) w
+                  """, (retain,))
+                  cutoff = cur.fetchone()[0]
+                  if cutoff is None:
+                      print("  no calendar rows; nothing trimmed")
+                      raise SystemExit(0)
+                  print(f"  retaining {retain} sessions, i.e. from {cutoff}")
+
+                  # Gold before bronze. See the comment above.
+                  for table in ("gold.tradeable_universe", "gold.eod_adjusted",
+                                "bronze.eod_bhav_raw"):
+                      cur.execute(f"DELETE FROM {table} WHERE trade_date < %s", (cutoff,))
+                      print(f"    {table:<28} {cur.rowcount:>10,} rows removed")
+              conn.commit()
+          print("  committed")
+          PY
+
+      - name: Summary
+        if: always()
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          {
+            echo "## EOD pipeline"
+            echo
+            echo "NSE reachability: **${{ steps.probe.outputs.verdict }}**"
+            echo
+            echo '```'
+            nse-eod universe-status 2>&1 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
