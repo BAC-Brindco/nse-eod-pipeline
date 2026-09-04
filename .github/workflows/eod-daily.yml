@@ -67,6 +67,17 @@ jobs:
       - name: Install
         run: pip install -e .
 
+      # Verify the connection string BEFORE anything touches the database. Three
+      # Supabase misconfigurations produce three misleading errors -- an IPv6-only
+      # direct host reads as "Network is unreachable", a pooler with the wrong
+      # username reads as a permissions problem, and the transaction pooler produces
+      # NO error while silently voiding the read-only guarantee. This turns each into
+      # one sentence, and proves a session-level SET survives a commit.
+      - name: Check DATABASE_URL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python .github/scripts/check_dsn.py
+
       # ------------------------------------------------------------------ preflight
       - name: Can this runner reach NSE?
         id: probe
