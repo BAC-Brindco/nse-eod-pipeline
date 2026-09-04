@@ -288,5 +288,33 @@ def materialize(
             stats["rows"] += written
             log.info("gold_chunk", isins=len(chunk), rows=written)
 
+            # COMMIT PER CHUNK, and this is load-bearing on a hosted database.
+            #
+            # A full rebuild is ~3.8M rows. Held in one transaction, every one of
+            # those writes generates write-ahead log that Postgres CANNOT recycle
+            # until the transaction commits, because a checkpoint may not discard WAL
+            # a live transaction might still need. On Supabase that filled the disk
+            # and produced an unrecoverable crash loop:
+            #
+            #     redo done at 9/23FFFEE0
+            #     could not write to file "pg_wal/xlogtemp.NNN": No space left on device
+            #     -> crash -> identical replay -> identical failure, every 13 seconds
+            #
+            # A full disk also prevents the checkpoint that would free it, so the
+            # instance cannot recover on its own. Committing per chunk bounds live WAL
+            # to roughly one chunk (~60k bars) instead of the whole panel.
+            #
+            # WHAT IS GIVEN UP: a full rebuild is no longer atomic. That is safe here,
+            # and specifically not a compromise:
+            #   * there is no pre-DELETE -- each chunk UPSERTS its own ISINs, so gold
+            #     is never emptied and a reader never sees it mid-truncate;
+            #   * the write is idempotent, so a crash mid-rebuild is repaired by
+            #     re-running rather than needing a rollback;
+            #   * the trading layer reads gold.tradeable_universe, not this table, and
+            #     that gate is rebuilt separately AFTER every validation check passes
+            #     -- so a partially rebuilt panel is not reachable as candidates.
+            # The atomicity that matters is the gate's, and it is untouched.
+            conn.commit()
+
     log.info("gold_materialized", **stats)
     return stats

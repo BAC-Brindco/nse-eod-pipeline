@@ -1,0 +1,176 @@
+name: Rebuild gold panel
+
+# Recompute cumulative factors, rebuild gold.eod_adjusted, then rebuild the verified
+# universe. Bronze and silver are untouched -- this derives, it does not fetch.
+#
+# WHEN THIS IS THE RIGHT WORKFLOW
+#   * after a backfill that ran with skip_gold, which is the normal way to load
+#     history (deferring the panel means factors are computed once, from the complete
+#     corporate-action record, instead of three times from partial ones);
+#   * after resolving a review-queue item, which changes a security's factors or its
+#     verification status without touching any price;
+#   * after a change to factor or anchor logic, with --reset-factors.
+#
+# WHY IT IS SEPARATE FROM eod-backfill
+# Running the backfill purely to reach its gold step re-scrapes corporate actions and
+# re-walks every session in the range. Those are idempotent and therefore harmless,
+# but they are also minutes of NSE requests to accomplish nothing. This does the
+# derivation alone.
+#
+# THE DISK LESSON THAT PRODUCED THIS FILE
+# The first attempt at a full materialisation on Supabase filled the disk and left
+# Postgres in an unrecoverable crash loop:
+#
+#     redo done at 9/23FFFEE0
+#     could not write to file "pg_wal/xlogtemp.NNN": No space left on device
+#
+# A full rebuild is ~3.8M rows, and held in ONE transaction none of that
+# write-ahead log can be recycled until it commits -- while a full disk also
+# prevents the checkpoint that would free it. materialize() now commits per chunk,
+# which bounds live WAL to roughly 60k bars. The pre-flight below refuses to start
+# if the database is already large enough that a rebuild would be tight.
+
+on:
+  workflow_dispatch:
+    inputs:
+      reset_factors:
+        description: "Re-derive EVERY factor from scratch (after changing factor logic)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  # Shared with the ingest workflows: two writers recomputing cum_factor for
+  # overlapping ISINs would leave the loser's rows carrying a factor_asof that no
+  # longer matches what is stored.
+  group: eod-pipeline
+  cancel-in-progress: false
+
+jobs:
+  gold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Check DATABASE_URL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python .github/scripts/check_dsn.py
+
+      - name: Pre-flight
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY'
+          import os, psycopg
+          with psycopg.connect(os.environ["DATABASE_URL"]) as c, c.cursor() as cur:
+              cur.execute("select pg_size_pretty(pg_database_size(current_database())), "
+                          "pg_database_size(current_database())")
+              pretty, raw = cur.fetchone()
+              cur.execute("select count(*), count(distinct trade_date) from bronze.eod_bhav_raw")
+              bars, sessions = cur.fetchone()
+              cur.execute("select count(*) from gold.eod_adjusted")
+              gold, = cur.fetchone()
+              print(f"  database   : {pretty}")
+              print(f"  bronze     : {bars:,} bars over {sessions} sessions")
+              print(f"  gold now   : {gold:,} rows")
+              if not bars:
+                  raise SystemExit("::error::bronze is empty; nothing to derive from")
+              # Rough guide: gold is a little larger per row than bronze, and the
+              # rebuild needs working room for WAL on top. Stated rather than
+              # enforced, because only Supabase knows the real disk size -- but it
+              # puts the number in front of whoever reads the log.
+              print(f"  note: expect gold to reach roughly {bars:,} rows; WAL is "
+                    f"recycled per chunk, so peak disk is bounded, not proportional "
+                    f"to the whole rebuild.")
+          PY
+
+      - name: Rebuild the panel
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ "${{ inputs.reset_factors }}" = "true" ]; then
+            nse-eod rebuild-adjusted --all --reset-factors
+          else
+            nse-eod rebuild-adjusted --all
+          fi
+
+      - name: Rebuild the verified universe
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # The gate, and the reason a green rebuild is not yet a working dashboard:
+        # the trading layer reads gold.tradeable_universe, not gold.eod_adjusted.
+        run: |
+          nse-eod refresh-quality
+          nse-eod universe-status
+
+      - name: Verify
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # These are the checks that actually prove the adjustment is sound. Row counts
+        # only prove something ran.
+        run: |
+          python - <<'PY'
+          import os, psycopg
+          fail = []
+          with psycopg.connect(os.environ["DATABASE_URL"]) as c, c.cursor() as cur:
+              cur.execute("select count(*), min(trade_date), max(trade_date) from gold.eod_adjusted")
+              n, lo, hi = cur.fetchone()
+              print(f"  gold.eod_adjusted        {n:>10,} rows   {lo} .. {hi}")
+
+              # RIGHT-EDGE IDENTITY. cum_factor is a reverse cumulative product of
+              # events with ex_date > trade_date, so the newest bar of every security
+              # has no future events and must be exactly 1.0. Anything else means the
+              # factor chain is wrong, and every adjusted price built on it is wrong.
+              cur.execute("""
+                  select count(*) from (
+                    select cum_factor, row_number() over
+                             (partition by isin order by trade_date desc) rn
+                      from gold.eod_adjusted) x
+                   where rn = 1 and abs(cum_factor - 1.0) > 1e-9""")
+              bad, = cur.fetchone()
+              print(f"  right-edge cum_factor!=1  {bad:>10}   (must be 0)")
+              if bad: fail.append(f"{bad} securities have a non-identity factor on their newest bar")
+
+              # At the right edge, adjusted and raw must agree, since the factor is 1.
+              cur.execute("""
+                  select count(*) from (
+                    select c_adj, c_raw, row_number() over
+                             (partition by isin order by trade_date desc) rn
+                      from gold.eod_adjusted) x
+                   where rn = 1 and c_adj is not null and c_raw is not null
+                     and abs(c_adj - c_raw) > 0.01""")
+              bad, = cur.fetchone()
+              print(f"  right-edge c_adj != c_raw {bad:>10}   (must be 0)")
+              if bad: fail.append(f"{bad} securities disagree between adjusted and raw close at the right edge")
+
+              cur.execute("select count(*), count(distinct isin) from gold.tradeable_universe")
+              n, secs = cur.fetchone()
+              print(f"  tradeable_universe       {n:>10,} rows   {secs} securities")
+              if not n: fail.append("the verified universe is EMPTY -- nothing would be a candidate")
+
+              cur.execute("select status, count(*) from silver.security_quality group by 1 order by 2 desc")
+              for st, cnt in cur.fetchall():
+                  print(f"    {st:<22}{cnt:>8,}")
+
+              cur.execute("select pg_size_pretty(pg_database_size(current_database()))")
+              print(f"  database size            {cur.fetchone()[0]:>10}")
+
+          if fail:
+              for f in fail:
+                  print(f"::error::{f}")
+              raise SystemExit(1)
+          print("::notice::panel verified: right-edge identity holds and the gate is populated")
+          PY
