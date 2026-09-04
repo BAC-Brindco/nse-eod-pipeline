@@ -119,6 +119,29 @@ jobs:
           echo "nse-eod backfill ${args[*]}"
           nse-eod backfill "${args[@]}"
 
+      - name: Ingest index closes (Nifty 50, India VIX)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # NOT covered by `backfill`, which ingests bars and corporate actions only.
+        # run-daily has its own index step, so a live pipeline stays current -- but a
+        # backfilled range ends up with no index history at all, and the consequence
+        # is quiet rather than loud:
+        #
+        #   the regime's TREND leg needs the benchmark's 200-day average, so with
+        #   silver.index_daily empty the scan degrades to neutral on breadth alone and
+        #   halves position sizing. Correct behaviour (it refuses to fabricate, and
+        #   vix_status reads "missing"), but it is half a signal reported as a whole
+        #   run.
+        #
+        # Cheap: one ~165-row CSV per session, so a full range is minutes.
+        # skip_existing means a re-run costs only the HTTP round trips.
+        run: |
+          if [ -n "${{ inputs.to }}" ]; then
+            nse-eod ingest-indices --from "${{ inputs.from }}" --to "${{ inputs.to }}"
+          else
+            nse-eod ingest-indices --from "${{ inputs.from }}"
+          fi
+
       - name: Rebuild the verified universe
         if: success() && inputs.skip_gold != true
         env:
