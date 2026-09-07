@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "component": "nse_eod",
-  "last_success_at": "2026-09-03T18:37:53.155498+05:30",
-  "last_success_trade_date": "2026-09-02",
-  "last_attempt_at": "2026-09-03T19:00:38.739660+05:30",
-  "last_attempt_status": "failed",
-  "universe_built_at": "2026-09-03T18:37:16.166095+05:30",
-  "age_hours": 0.38,
+  "last_success_at": "2026-09-06T19:01:47.059310+05:30",
+  "last_success_trade_date": "2026-09-06",
+  "last_attempt_at": "2026-09-06T19:01:47.059310+05:30",
+  "last_attempt_status": "warning",
+  "universe_built_at": "2026-09-04T19:05:57.952811+05:30",
+  "age_hours": 0.0,
   "max_age_hours": 30.0,
   "stale": false,
-  "published_at": "2026-09-03T13:30:39.514810+00:00"
+  "published_at": "2026-09-06T13:31:47.798178+00:00"
 }

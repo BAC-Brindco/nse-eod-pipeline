@@ -97,6 +97,7 @@ jobs:
 
       # -------------------------------------------------------------------- ingest
       - name: Run the daily pipeline
+        id: ingest
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
@@ -113,16 +114,31 @@ jobs:
         run: nse-eod universe-status
 
       - name: Heartbeat
-        if: success()
+        if: always()
+        continue-on-error: true
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         # Content is DERIVED FROM THE DATABASE, never from the wall clock, so running
         # this by hand cannot move last_success_at forward and fake freshness.
+        #
+        # continue-on-error, and if: always(). This step REPORTS freshness; it must
+        # not decide whether the run failed. Observed on 2026-09-04: the pipeline
+        # correctly skipped a market holiday and exited 0, then this step exited 2
+        # (because run-daily had never yet succeeded in this database) and painted
+        # the whole run red -- and, being a prerequisite, silently skipped the
+        # retention trim below.
+        #
+        # A dead-man's switch that turns a correct run red is a switch people learn
+        # to ignore. Its verdict belongs in the log and the database, not in the
+        # workflow's exit status.
         run: nse-eod last-success
 
       # ----------------------------------------------------------------- retention
       - name: Trim sessions outside the retention window
-        if: success() && !inputs.skip_retention
+        # Keyed on the INGEST's outcome, not on every preceding step. It used to be
+        # `if: success()`, which meant a failed heartbeat -- a reporting step --
+        # silently skipped retention and let the database grow unbounded.
+        if: steps.ingest.conclusion == 'success' && !inputs.skip_retention
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           # 900 sessions ~= 3.5 years. Not a round number: the dashboard's

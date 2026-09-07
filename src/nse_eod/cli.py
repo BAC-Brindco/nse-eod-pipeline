@@ -509,8 +509,15 @@ def universe_status_cmd(
 # ------------------------------------------------------------ last-success (B)
 @app.command("last-success")
 def last_success_cmd(
+    max_sessions_behind: int = typer.Option(
+        0,
+        "--max-sessions-behind",
+        help="exit 2 if this many COMPLETED trading sessions are missing (default 0)",
+    ),
     max_age_hours: float = typer.Option(
-        30.0, "--max-age-hours", help="exit 2 if the last success is older than this"
+        30.0,
+        "--max-age-hours",
+        help="fallback tolerance, used only when the trading calendar cannot be read",
     ),
     quiet: bool = typer.Option(False, "--quiet", help="print one line only"),
     heartbeat: bool = typer.Option(
@@ -525,12 +532,30 @@ def last_success_cmd(
     nothing looks broken. `status IN (success, warning)` counts as success on
     purpose -- run-daily exits 1 for warnings, which is a completed run.
 
-    Default 30h tolerance spans a normal weekday gap plus slack; a Monday morning
-    check after a weekend legitimately sees ~65h, so use --max-age-hours there.
+    THE VERDICT IS IN TRADING SESSIONS, NOT HOURS
+    ---------------------------------------------
+    It counts completed sessions missed, from bronze.trading_calendar:
+
+        trading days > last_success_trade_date AND < current_date
+
+    Strictly before today, because today's bhavcopy is not published until after the
+    close -- counting it would make every morning look stale.
+
+    This replaced a 30-hour tolerance whose own docstring conceded the flaw: a Monday
+    morning after a weekend legitimately shows ~65h, and after a Friday holiday ~90h.
+    An automated daily job has nobody to pass --max-age-hours, so it fired every
+    Monday. A dead-man's switch that cries wolf on a schedule is worse than none --
+    its only value is that when it fires, you believe it.
+
+    Weekend- and holiday-proof for free, because the calendar knows which days
+    actually traded, and it knows from OBSERVED bhavcopies rather than a weekday rule.
+
+    Hours are still reported (more human to read) and still used as the verdict if the
+    calendar cannot be read at all.
     """
     import datetime as _dt
 
-    from .db import fetch_one
+    from .db import fetch_all, fetch_one
     from .orchestrate.heartbeat import publish
 
     r = fetch_one("SELECT * FROM ops.v_last_success")
@@ -553,20 +578,59 @@ def last_success_cmd(
         raise typer.Exit(2)
 
     age_h = (_dt.datetime.now(_dt.timezone.utc) - last).total_seconds() / 3600.0
+
+    # Sessions missed, from the calendar. Strictly before today: today's bhavcopy is
+    # not published until after the close, so including it would make every morning
+    # read as stale.
+    behind = None
+    missed = []
+    try:
+        rows = fetch_all(
+            """
+            SELECT cal_date FROM bronze.trading_calendar
+             WHERE is_trading_day
+               AND cal_date > %s
+               AND cal_date < current_date
+             ORDER BY cal_date
+            """,
+            (r["last_success_trade_date"],),
+        )
+        missed = [x["cal_date"] for x in rows]
+        behind = len(missed)
+    except Exception as exc:  # noqa: BLE001
+        typer.secho(
+            f"WARN calendar unreadable ({type(exc).__name__}); falling back to the "
+            f"{max_age_hours}h rule",
+            fg="yellow",
+            err=True,
+        )
+
+    stale = (behind > max_sessions_behind) if behind is not None else (age_h > max_age_hours)
+
     typer.echo(
         f"EOD pipeline last ran: {last:%Y-%m-%d %H:%M:%S %Z} "
         f"({age_h:.1f}h ago, trade_date {r['last_success_trade_date']})"
     )
+    if behind is not None:
+        detail = f"  ({', '.join(str(d) for d in missed[:5])})" if missed else ""
+        typer.echo(f"  sessions missed   : {behind}{detail}")
     if quiet:
-        raise typer.Exit(0 if age_h <= max_age_hours else 2)
+        raise typer.Exit(2 if stale else 0)
 
     typer.echo(f"  last attempt      : {r['last_attempt_at']} ({r['last_attempt_status']})")
     typer.echo(f"  universe built    : {r['universe_built_at']}")
-    if age_h > max_age_hours:
-        typer.echo(
-            f"\nSTALE: older than {max_age_hours}h. The nightly run has not "
-            "completed -- do not trade on these prices."
-        )
+    if stale:
+        if behind is not None:
+            typer.echo(
+                f"\nSTALE: {behind} completed trading session(s) missing "
+                f"({', '.join(str(d) for d in missed[:5])}). The nightly run has not "
+                "completed -- do not trade on these prices."
+            )
+        else:
+            typer.echo(
+                f"\nSTALE: older than {max_age_hours}h. The nightly run has not "
+                "completed -- do not trade on these prices."
+            )
         raise typer.Exit(2)
 
 

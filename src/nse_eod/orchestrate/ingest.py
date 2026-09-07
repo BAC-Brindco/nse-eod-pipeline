@@ -732,7 +732,37 @@ def derive_calendar_from_observation(settings: Settings | None = None) -> dict:
             cur.execute("SELECT DISTINCT trade_date FROM bronze.eod_bhav_raw ORDER BY 1")
             traded = [r["trade_date"] for r in cur.fetchall()]
 
-            # Attempted-and-empty weekdays inside the span: proven non-trading.
+            # Attempted-and-empty weekdays: non-trading, but ONLY on evidence that
+            # could actually distinguish a holiday from a file that was not published
+            # yet.
+            #
+            # THE BUG THIS GUARDS, OBSERVED LIVE ON 2026-09-04
+            # An index backfill ran at 14:49 IST -- market still open, hours before
+            # NSE publishes the bhavcopy. The ingest attempt 404ed and was
+            # watermarked 'skipped', so this query concluded "no bhavcopy published
+            # (holiday, observed)" and wrote 2026-09-04 into the calendar as a
+            # non-trading day.
+            #
+            # NSE had in fact traded that day. The next scheduled run-daily then
+            # consulted the poisoned calendar, skipped the session, and -- because a
+            # day marked holiday is never revisited -- would have left it missing
+            # permanently. A whole trading session silently absent, with every run
+            # reporting success.
+            #
+            # The flaw was treating ABSENCE OF A FILE as evidence of a holiday with
+            # no notion of whether the file could exist yet. That is the same
+            # distinction the NSE probe makes on purpose: 404 is a TIMING answer,
+            # not a refusal.
+            #
+            # So two conditions, and both are necessary:
+            #   cal_date < current_date      never judge a session that may still be
+            #                                mid-publication
+            #   completed_at::date >         the attempt must have been made on a
+            #     target_date                LATER day than the session, so
+            #                                publication had every chance. This is
+            #                                what excludes the 2026-09-04 case,
+            #                                where the attempt and the session were
+            #                                the same day.
             cur.execute(
                 """
                 SELECT w.target_date
@@ -740,6 +770,8 @@ def derive_calendar_from_observation(settings: Settings | None = None) -> dict:
                  WHERE w.command = 'ingest-eod'
                    AND w.status = 'skipped'
                    AND extract(isodow FROM w.target_date) < 6
+                   AND w.target_date < current_date
+                   AND (w.completed_at AT TIME ZONE 'Asia/Kolkata')::date > w.target_date
                    AND NOT EXISTS (
                         SELECT 1 FROM bronze.eod_bhav_raw b
                          WHERE b.trade_date = w.target_date
